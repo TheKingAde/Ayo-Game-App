@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayo Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="container">
+        <div class="logo">
+            <img src="./images/AyoLogo.jpeg" alt="Ayo Game Logo">
+        </div>
+        <div class="board">
+            <img src="./images/AyoBoard.png" alt="Ayo Board Image">
+        </div>
+        <button id="startButton">PLAY</button>
+        <div id="buttonsContainer" class="hidden">
+            <button id="aiButton">AI</button>
+            <div id="difficultyLevel" class="hidden">
+                <p><b>Choose Difficulty Level</b></p>
+                <button id="easyButton">EASY</button> 
+                <button>MEDIUM</button>
+                <button>HARD</button>
+            </div>
+            <button id="onlineButton">ONLINE</button>
+        </div>
+        <div id="AIscoreBoard" class="hidden">
+            <div id="aiScore"><span class="scoreBoardLook">AI: 0</span></div>
+        </div>
+        <div id="gameContainer" class="hidden">
+            <div id="ayoBoard">
+                <div class="playerSide">
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                </div>
+                <div class="playerSide">
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                    <div class="pit">4</div>
+                </div>
+            </div>
+        </div>
+        <div id="PlayerscoreBoard" class="hidden">
+            <div id="playerScore"><span class="scoreBoardLook">Player: 0</span></div>
+        </div>
+        <script src="scripts.js"></script>
+</body>
+</html>
