@@ -1,46 +1,64 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('startButton').addEventListener('click', function() {
-        // Hide the start button
-        this.style.display = 'none';
+    const startButton = document.getElementById('startButton');
+    const aiButton = document.getElementById('aiButton');
+    const easyButton = document.getElementById('easyButton');
+    const exitButton = document.getElementById('exitButton');
+    const exitGameButton = document.getElementById('exitGameButton');
+    const restartGameButton = document.getElementById('restartGameButton');
+    const optionsMenu = document.getElementById('optionsMenu');
 
-        // Show the AI and ONLINE buttons with a transition
-        var buttonsContainer = document.getElementById('buttonsContainer');
-        buttonsContainer.className = 'visible';
+    startButton.addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('buttonsContainer').className = 'visible';
     });
 
-    document.getElementById('aiButton').addEventListener('click', function() {
-        // Hide the AI button button
+    aiButton.addEventListener('click', function() {
         this.style.display = 'none';
-
-        // Show the AI and ONLINE buttons with a transition
-        var buttonsContainer = document.getElementById('difficultyLevel');
-        buttonsContainer.className = 'visible';
-        var onlineButton = document.getElementById('onlineButton');
-        // Hide the online button
-        onlineButton.style.display = 'none';
+        document.getElementById('difficultyLevel').className = 'visible';
+        document.getElementById('onlineButton').style.display = 'none';
     });
 
-    document.getElementById('easyButton').addEventListener('click', function() {
-        // Hide the difficulty level buttons
-        var difficultyLevel = document.getElementById('difficultyLevel');
-        difficultyLevel.className = 'hidden';
-    
-        // Show the game board and score board
-        var gameContainer = document.getElementById('gameContainer');
-        gameContainer.className = 'visible';
-    
-        // Hide the AYO logo and Board logo
-        var logo = document.querySelector('.logo');
-        var board = document.querySelector('.board');
-        logo.style.display = 'none';
-        board.style.display = 'none';
-        // Show AI the score board
-        var scoreBoard = document.getElementById('AIscoreBoard');
-        scoreBoard.className = 'visible';
+    easyButton.addEventListener('click', startGame);
+    exitButton.addEventListener('click', openOptionsMenu);
+    exitGameButton.addEventListener('click', exitGame);
+    restartGameButton.addEventListener('click', resetGame);
 
-        // Show AI the score board
-        var scoreBoard = document.getElementById('PlayerscoreBoard');
-        scoreBoard.className = 'visible';
-        document.body.classList.add('backgroundImage');
+    optionsMenu.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+
+    document.addEventListener('click', function() {
+        optionsMenu.className = 'hidden';
     });
 });
+
+function startGame() {
+    // Hide the difficulty level buttons
+    document.getElementById('difficultyLevel').className = 'hidden';
+
+    // Show the game board and score board
+    document.getElementById('gameContainer').className = 'visible';
+    document.getElementById('AIscoreBoard').className = 'visible';
+    document.getElementById('PlayerscoreBoard').className = 'visible';
+
+    // Hide the AYO logo and Board logo
+    document.querySelector('.logo').style.display = 'none';
+    document.querySelector('.board').style.display = 'none';
+
+    document.body.classList.add('backgroundImage');
+    document.getElementById('exitButton').style.display = 'block';
+}
+
+function openOptionsMenu(event) {
+    event.stopPropagation();
+    document.getElementById('optionsMenu').className = 'visible';
+}
+
+function exitGame() {
+    location.reload();
+    // Reset the game state
+}
+
+function resetGame() {
+    // Reset the game state
+}

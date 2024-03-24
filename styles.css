@@ -157,6 +157,9 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #382112;
+    border-radius: 20px;
+    box-shadow: 0px 0px 4px 2px #000000; /* Add shadow */
 }
 
 .playerSide {
@@ -209,4 +212,45 @@ body.backgroundImage {
     margin: 4px 2px;
     border-radius: 4px;
     border: none;
+}
+
+.exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    color: rgb(29, 29, 29);
+    cursor: pointer;
+    display: none; /* Initially hidden */
+}
+
+#optionsMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000;
+    border-radius: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    margin: 0 20px;
+}
+
+#optionsMenu.hidden {
+    /* Hide it initially */
+    display: none; 
+}
+
+#optionsMenu.visible {
+    /* Show it when the class is added */
+    display: flex; 
 }
