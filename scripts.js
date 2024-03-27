@@ -150,39 +150,39 @@ class Game {
             return; // No valid moves
         }
 
-        // // Prioritize moves that result in capturing opponent stones
-        // for (let i = 0; i < validMoves.length; i++) {
-        //     const testBoard = JSON.parse(JSON.stringify(this.board)); // Create a copy of the board for testing
-        //     const moveIndex = validMoves[i];
-        //     let stones = testBoard[1][moveIndex]; // AI player index is 1
-        //     let pitIndex = moveIndex;
+        // Prioritize moves that result in capturing opponent stones
+        for (let i = 0; i < validMoves.length; i++) {
+            const testBoard = JSON.parse(JSON.stringify(this.board)); // Create a copy of the board for testing
+            const moveIndex = validMoves[i];
+            let stones = testBoard[1][moveIndex]; // AI player index is 1
+            let pitIndex = moveIndex;
 
-        //     // Simulate the move
-        //     testBoard[1][moveIndex] = 0;
-        //     while (stones > 0) {
-        //         pitIndex = (pitIndex + 1) % 6; // Move to the next pit
-        //         if (pitIndex === 0) {
-        //             // Skip the opponent's store pit
-        //             pitIndex = (pitIndex + 1) % 6;
-        //         }
-        //         testBoard[1][pitIndex]++;
-        //         stones--;
+            // Simulate the move
+            testBoard[1][moveIndex] = 0;
+            while (stones > 0) {
+                pitIndex = (pitIndex + 1) % 6; // Move to the next pit
+                if (pitIndex === 0) {
+                    // Skip the opponent's store pit
+                    pitIndex = (pitIndex + 1) % 6;
+                }
+                testBoard[1][pitIndex]++;
+                stones--;
 
-        //         if (stones === 0 && pitIndex !== 5 && testBoard[1][pitIndex] === 1 && testBoard[0][5 - pitIndex] > 0) {
-        //             // If the last stone lands in an empty pit on AI's side and opposite pit has stones
-        //             // Capture opponent stones
-        //             testBoard[1][5] += testBoard[0][5 - pitIndex] + 1; // Add captured stones to AI's store
-        //             testBoard[0][5 - pitIndex] = 0; // Empty the opponent's pit
-        //             testBoard[1][pitIndex] = 0; // Empty AI's pit
-        //         }
-        //     }
+                if (stones === 0 && pitIndex !== 5 && testBoard[1][pitIndex] === 1 && testBoard[0][5 - pitIndex] > 0) {
+                    // If the last stone lands in an empty pit on AI's side and opposite pit has stones
+                    // Capture opponent stones
+                    testBoard[1][5] += testBoard[0][5 - pitIndex] + 1; // Add captured stones to AI's store
+                    testBoard[0][5 - pitIndex] = 0; // Empty the opponent's pit
+                    testBoard[1][pitIndex] = 0; // Empty AI's pit
+                }
+            }
 
-        //     // If the move results in a capture, make the move
-        //     if (testBoard[1][5] > this.board[1][5]) {
-        //         this.move(1, moveIndex);
-        //         return;
-        //     }
-        // }
+            // If the move results in a capture, make the move
+            if (testBoard[1][5] > this.board[1][5]) {
+                this.move(1, moveIndex);
+                return;
+            }
+        }
 
         // If no capturing move is found, make a random move
         const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
