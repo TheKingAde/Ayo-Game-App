@@ -2,7 +2,7 @@ class Game {
     constructor() {
         this.board = []; // This will hold the pits for each player
         this.score = [0, 0]; // Scores for each player
-        this.currentPlayer = 0; // Current player (0 for player 1, 1 for player 2)
+        this.currentPlayer = 1; // Current player (0 for player 1, 1 for player 2)
         this.gameOver = false; // Indicates whether the game is over
         this.playerTurn = true; // Indicates whether it's the player's turn
     }
@@ -18,28 +18,40 @@ class Game {
 
     move(playerIndex, pitIndex) {
         if (this.gameOver) {
-            return console.log('Game Over') // If the game is over, pop up Game Over
+            return console.log('Game Over'); // If the game is over, pop up Game Over
         }
-
+    
         let stones = this.board[playerIndex][pitIndex];
         if (stones === 0) {
             return; // Cannot move from an empty pit
         }
-
+    
         this.board[playerIndex][pitIndex] = 0; // Remove stones from the selected pit
         let currentPit = pitIndex;
         let currentBoard = playerIndex;
-
+    
         while (stones > 0) {
-            currentPit = (currentPit + 1) % 6; // Move to the next pit
-            if (currentPit === 0) {
-                // Switch to the opponent's pits when current player's pits are exhausted
-                currentBoard = 1 - currentBoard;
+            // Move stones to the left on the player's side
+            if (currentBoard === 0) {
+                currentPit--;
+                // If the current pit is less than 0, move to the AI's side
+                if (currentPit < 0) {
+                    currentPit = 0;
+                    currentBoard = 1; // Switch to the AI's side
+                }
+            } else {
+                // Move stones to the right on the AI's side
+                currentPit++;
+                // If the current pit is greater than 5, move to the player's side
+                if (currentPit > 5) {
+                    currentPit = 5;
+                    currentBoard = 0; // Switch to the player's side
+                }
             }
-
+            
             this.board[currentBoard][currentPit]++; // Drop a stone into the pit
             stones--;
-
+    
             // Check if the last stone lands in an empty pit on the player's side
             if (stones === 0 && currentBoard === playerIndex && this.board[currentBoard][currentPit] === 1) {
                 const oppositePit = 5 - currentPit;
@@ -51,14 +63,30 @@ class Game {
                     this.board[1 - currentBoard][oppositePit] = 0;
                 }
             }
+    
+            // Check if the last stone lands in an empty pit on the AI's side
+            if (stones === 0 && currentBoard === 1 && this.board[currentBoard][currentPit] === 1) {
+                const oppositePit = 5 - currentPit;
+                const oppositeStones = this.board[1 - currentBoard][oppositePit];
+                if (oppositeStones > 0) {
+                    // Capture the stones from the opposite pit
+                    this.score[playerIndex] += oppositeStones + 1;
+                    this.board[currentBoard][currentPit] = 0;
+                    this.board[1 - currentBoard][oppositePit] = 0;
+                }
+            }
         }
-
+    
         // Check for game over and switch player if necessary
         if (this.checkGameOver()) {
             this.gameOver = true;
             this.updateUI();
         }
     }
+    
+    
+    
+    
 
     playerMove(pitIndex) {
         if (this.currentPlayer !== 0) {
@@ -88,8 +116,21 @@ class Game {
         }
 
         // Update the scores
-        document.getElementById('score-0').innerText = `Player: ${this.score[0]}`;
-        document.getElementById('score-1').innerText = `AI: ${this.score[1]}`;
+        document.getElementById('score-0').innerText = ` You ---[${this.score[0]}]---  `;
+        document.getElementById('score-1').innerText = `  AI ---[${this.score[1]}]---  `;
+
+        // Display "Game Over" and the result if the game is over
+        if (this.gameOver) {
+            let result = 'Game Over\n';
+            if (this.score[0] > this.score[1]) {
+                result += 'You Win';
+            } else if (this.score[0] < this.score[1]) {
+                result += 'You Lose';
+            } else {
+                result += 'It\'s a Draw';
+            }
+            document.getElementById('gameStatus').innerText = result;
+        }
     }
 
     getValidMoves() {
@@ -109,39 +150,39 @@ class Game {
             return; // No valid moves
         }
 
-        // Prioritize moves that result in capturing opponent stones
-        for (let i = 0; i < validMoves.length; i++) {
-            const testBoard = JSON.parse(JSON.stringify(this.board)); // Create a copy of the board for testing
-            const moveIndex = validMoves[i];
-            let stones = testBoard[1][moveIndex]; // AI player index is 1
-            let pitIndex = moveIndex;
+        // // Prioritize moves that result in capturing opponent stones
+        // for (let i = 0; i < validMoves.length; i++) {
+        //     const testBoard = JSON.parse(JSON.stringify(this.board)); // Create a copy of the board for testing
+        //     const moveIndex = validMoves[i];
+        //     let stones = testBoard[1][moveIndex]; // AI player index is 1
+        //     let pitIndex = moveIndex;
 
-            // Simulate the move
-            testBoard[1][moveIndex] = 0;
-            while (stones > 0) {
-                pitIndex = (pitIndex + 1) % 6; // Move to the next pit
-                if (pitIndex === 0) {
-                    // Skip the opponent's store pit
-                    pitIndex = (pitIndex + 1) % 6;
-                }
-                testBoard[1][pitIndex]++;
-                stones--;
+        //     // Simulate the move
+        //     testBoard[1][moveIndex] = 0;
+        //     while (stones > 0) {
+        //         pitIndex = (pitIndex + 1) % 6; // Move to the next pit
+        //         if (pitIndex === 0) {
+        //             // Skip the opponent's store pit
+        //             pitIndex = (pitIndex + 1) % 6;
+        //         }
+        //         testBoard[1][pitIndex]++;
+        //         stones--;
 
-                if (stones === 0 && pitIndex !== 5 && testBoard[1][pitIndex] === 1 && testBoard[0][5 - pitIndex] > 0) {
-                    // If the last stone lands in an empty pit on AI's side and opposite pit has stones
-                    // Capture opponent stones
-                    testBoard[1][5] += testBoard[0][5 - pitIndex] + 1; // Add captured stones to AI's store
-                    testBoard[0][5 - pitIndex] = 0; // Empty the opponent's pit
-                    testBoard[1][pitIndex] = 0; // Empty AI's pit
-                }
-            }
+        //         if (stones === 0 && pitIndex !== 5 && testBoard[1][pitIndex] === 1 && testBoard[0][5 - pitIndex] > 0) {
+        //             // If the last stone lands in an empty pit on AI's side and opposite pit has stones
+        //             // Capture opponent stones
+        //             testBoard[1][5] += testBoard[0][5 - pitIndex] + 1; // Add captured stones to AI's store
+        //             testBoard[0][5 - pitIndex] = 0; // Empty the opponent's pit
+        //             testBoard[1][pitIndex] = 0; // Empty AI's pit
+        //         }
+        //     }
 
-            // If the move results in a capture, make the move
-            if (testBoard[1][5] > this.board[1][5]) {
-                this.move(1, moveIndex);
-                return;
-            }
-        }
+        //     // If the move results in a capture, make the move
+        //     if (testBoard[1][5] > this.board[1][5]) {
+        //         this.move(1, moveIndex);
+        //         return;
+        //     }
+        // }
 
         // If no capturing move is found, make a random move
         const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
@@ -177,12 +218,9 @@ class Game {
     
     resetGame() {
         // Reset the game state
-        // will  implement this later
+        this.init();
     }
-
-
 }
-
 
 let game;
 document.addEventListener('DOMContentLoaded', function() {

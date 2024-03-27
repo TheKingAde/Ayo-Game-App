@@ -24,13 +24,19 @@
             <div id="difficultyLevel" class="hidden">
                 <p><b>Choose Difficulty Level</b></p>
                 <button id="easyButton">EASY</button> 
-                <button>MEDIUM</button>
-                <button>HARD</button>
+                <button>MEDIUM [coming soon]</button>
+                <button>HARD [coming soon] </button>
             </div>
-            <button id="onlineButton">ONLINE</button>
+            <button id="onlineButton">ONLINE [coming soon]</button>
         </div>
-        <div id="AIscoreBoard" class="hidden">
-            <div id="score-1"><span>AI: 0</span></div>
+        <div id="gameStatus"></div>
+        <div id="scoreBoard">
+            <div id="AIscoreBoard" class="hidden">
+                <div id="score-1"><span>  AI: 0  </span></div>
+            </div>
+            <div id="PlayerscoreBoard" class="hidden">
+                <div id="score-0"><span>  You: 0  </span></div>
+            </div>
         </div>
         <div id="gameContainer" class="hidden">
             <div id="ayoBoard">
@@ -51,9 +57,6 @@
                     <div id="pit-1-5" class="pit">4</div>
                 </div>
             </div>
-        </div>
-        <div id="PlayerscoreBoard" class="hidden">
-            <div id="score-0"><span>Player: 0</span></div>
         </div>
         <script src="scripts.js"></script>
 </body>
