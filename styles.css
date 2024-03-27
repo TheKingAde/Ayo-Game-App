@@ -201,18 +201,18 @@ body.backgroundImage {
     transition: background-image 2s ease-in-out;
 }
 
-.scoreBoardLook {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #000000; /* black background */
-    color: white; /* White text */
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 4px 2px;
-    border-radius: 4px;
-    border: none;
-}
+/* .scoreBoardLook {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    margin-top: 200px;
+    font-size: 24px;
+} */
 
 .exit-button {
     position: absolute;

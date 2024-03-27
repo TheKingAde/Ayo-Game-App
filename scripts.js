@@ -4,6 +4,7 @@ class Game {
         this.score = [0, 0]; // Scores for each player
         this.currentPlayer = 0; // Current player (0 for player 1, 1 for player 2)
         this.gameOver = false; // Indicates whether the game is over
+        this.playerTurn = true; // Indicates whether it's the player's turn
     }
 
     init() {
@@ -17,7 +18,7 @@ class Game {
 
     move(playerIndex, pitIndex) {
         if (this.gameOver) {
-            return; // If the game is over, do nothing
+            return console.log('Game Over') // If the game is over, pop up Game Over
         }
 
         let stones = this.board[playerIndex][pitIndex];
@@ -27,26 +28,27 @@ class Game {
 
         this.board[playerIndex][pitIndex] = 0; // Remove stones from the selected pit
         let currentPit = pitIndex;
+        let currentBoard = playerIndex;
 
         while (stones > 0) {
             currentPit = (currentPit + 1) % 6; // Move to the next pit
-            if (currentPit === 0 && playerIndex !== this.currentPlayer) {
-                // Skip the opponent's store pit
-                currentPit = (currentPit + 1) % 6;
+            if (currentPit === 0) {
+                // Switch to the opponent's pits when current player's pits are exhausted
+                currentBoard = 1 - currentBoard;
             }
 
-            this.board[playerIndex][currentPit]++; // Drop a stone into the pit
+            this.board[currentBoard][currentPit]++; // Drop a stone into the pit
             stones--;
 
             // Check if the last stone lands in an empty pit on the player's side
-            if (stones === 0 && playerIndex === this.currentPlayer && this.board[playerIndex][currentPit] === 1) {
+            if (stones === 0 && currentBoard === playerIndex && this.board[currentBoard][currentPit] === 1) {
                 const oppositePit = 5 - currentPit;
-                const oppositeStones = this.board[1 - playerIndex][oppositePit];
+                const oppositeStones = this.board[1 - currentBoard][oppositePit];
                 if (oppositeStones > 0) {
                     // Capture the stones from the opposite pit
                     this.score[playerIndex] += oppositeStones + 1;
-                    this.board[playerIndex][currentPit] = 0;
-                    this.board[1 - playerIndex][oppositePit] = 0;
+                    this.board[currentBoard][currentPit] = 0;
+                    this.board[1 - currentBoard][oppositePit] = 0;
                 }
             }
         }
@@ -55,12 +57,15 @@ class Game {
         if (this.checkGameOver()) {
             this.gameOver = true;
             this.updateUI();
-        } else {
-            if (currentPit !== 5) { // If the last stone didn't land in the store, switch players
-                this.currentPlayer = 1 - this.currentPlayer;
-            }
-            this.updateUI();
         }
+    }
+
+    playerMove(pitIndex) {
+        if (this.currentPlayer !== 0) {
+            return; // It's not the player's turn
+        }
+        this.move(0, pitIndex); // Player's move, player index is 0
+        this.currentPlayer = 1; // Switch to the AI's turn
     }
 
     checkGameOver() {
@@ -142,11 +147,44 @@ class Game {
         const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
         this.move(1, randomMove); // AI player index is 1
     }
+
+    startGame() {
+        // Hide the difficulty level buttons
+        document.getElementById('difficultyLevel').className = 'hidden';
+    
+        // Show the game board and score board
+        document.getElementById('gameContainer').className = 'visible';
+        document.getElementById('AIscoreBoard').className = 'visible';
+        document.getElementById('PlayerscoreBoard').className = 'visible';
+    
+        // Hide the AYO logo and Board logo
+        document.querySelector('.logo').style.display = 'none';
+        document.querySelector('.board').style.display = 'none';
+    
+        document.body.classList.add('backgroundImage');
+        document.getElementById('exitButton').style.display = 'block';
+    }
+    
+    openOptionsMenu(event) {
+        event.stopPropagation();
+        document.getElementById('optionsMenu').className = 'visible';
+    }
+    
+    exitGame() {
+        location.reload();
+        // Reset the game state
+    }
+    
+    resetGame() {
+        // Reset the game state
+        // will  implement this later
+    }
+
+
 }
 
 
 let game;
-let playerTurn = true;
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     const aiButton = document.getElementById('aiButton');
@@ -167,16 +205,43 @@ document.addEventListener('DOMContentLoaded', function() {
         this.style.display = 'none';
         document.getElementById('difficultyLevel').className = 'visible';
         document.getElementById('onlineButton').style.display = 'none';
-        game.basicAI();
     });
 
+    function handleTurns() {
+        if (game.gameOver) {
+            return; // End the loop if the game is over
+        }
+
+        if (game.currentPlayer === 0) {
+            // Player's turn
+            const pits = document.querySelectorAll('.pit');
+            pits.forEach((pit, index) => {
+                pit.addEventListener('click', () => {
+                    game.playerMove(index);
+                    game.updateUI();
+                    game.currentPlayer = 1; // Switch to the AI's turn
+                    handleTurns(); // Call handleTurns again to handle the AI's turn
+                });
+            });
+        } else {
+            // AI's turn
+            setTimeout(() => {
+                    game.basicAI(); // AI's move after a delay
+                    game.updateUI();
+                    game.currentPlayer = 0; // Switch to the player's turn
+                    handleTurns(); // Call handleTurns again to handle the player's turn
+            }, 5000);
+        }
+    }
+
     easyButton.addEventListener('click', function() {
-        startGame();
-        // game.basicAI();
+        game.startGame();
+        handleTurns();
     });
-    exitButton.addEventListener('click', openOptionsMenu);
-    exitGameButton.addEventListener('click', exitGame);
-    restartGameButton.addEventListener('click', resetGame);
+
+    exitButton.addEventListener('click', game.openOptionsMenu.bind(game));
+    exitGameButton.addEventListener('click', game.exitGame.bind(game));
+    restartGameButton.addEventListener('click', game.resetGame.bind(game));
 
     optionsMenu.addEventListener('click', function(event) {
         event.stopPropagation();
@@ -185,55 +250,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function() {
         optionsMenu.className = 'hidden';
     });
-
-    const pits = document.querySelectorAll('.pit');
-
-    pits.forEach((pit, index) => {
-        pit.addEventListener('click', function() {
-            if (playerTurn && game.currentPlayer === 0) {
-                game.move(0, index); // Player's move, player index is 0
-                playerTurn = false; // Switch turn after player's move
-                setTimeout(() => {
-                    if (!game.gameOver && !playerTurn) {
-                        game.basicAI(); // AI's move after a delay
-                        playerTurn = true; // Switch turn after AI's move
-                    }
-                }, 5000); // 5 seconds delay
-            }
-        });
-    });
-
-    game.updateUI();
 });
-
-function startGame() {
-    // Hide the difficulty level buttons
-    document.getElementById('difficultyLevel').className = 'hidden';
-
-    // Show the game board and score board
-    document.getElementById('gameContainer').className = 'visible';
-    document.getElementById('AIscoreBoard').className = 'visible';
-    document.getElementById('PlayerscoreBoard').className = 'visible';
-
-    // Hide the AYO logo and Board logo
-    document.querySelector('.logo').style.display = 'none';
-    document.querySelector('.board').style.display = 'none';
-
-    document.body.classList.add('backgroundImage');
-    document.getElementById('exitButton').style.display = 'block';
-}
-
-function openOptionsMenu(event) {
-    event.stopPropagation();
-    document.getElementById('optionsMenu').className = 'visible';
-}
-
-function exitGame() {
-    location.reload();
-    // Reset the game state
-}
-
-function resetGame() {
-    // Reset the game state
-    // will  implement this later
-}
