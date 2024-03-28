@@ -1,4 +1,4 @@
-.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('startButton').addEventListener('click', function() {
         // Hide the start button
         this.style.display = 'none';
