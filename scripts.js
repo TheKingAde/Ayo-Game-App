@@ -118,19 +118,6 @@ class Game {
         // Update the scores
         document.getElementById('score-0').innerText = ` You ---[${this.score[0]}]---  `;
         document.getElementById('score-1').innerText = `  AI ---[${this.score[1]}]---  `;
-
-        // Display "Game Over" and the result if the game is over
-        if (this.gameOver) {
-            let result = 'Game Over\n';
-            if (this.score[0] > this.score[1]) {
-                result += 'You Win';
-            } else if (this.score[0] < this.score[1]) {
-                result += 'You Lose';
-            } else {
-                result += 'It\'s a Draw';
-            }
-            document.getElementById('gameStatus').innerText = result;
-        }
     }
 
     getValidMoves() {
@@ -189,6 +176,12 @@ class Game {
         this.move(1, randomMove); // AI player index is 1
     }
 
+    getGameData() {
+        return JSON.stringify({
+            score: this.score,
+        });
+    }
+
     startGame() {
         // Hide the difficulty level buttons
         document.getElementById('difficultyLevel').className = 'hidden';
@@ -245,23 +238,37 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('onlineButton').style.display = 'none';
     });
 
+    const pits = document.querySelectorAll('.pit');
+    pits.forEach((pit, index) => {
+        pit.addEventListener('click', () => {
+            if (game.currentPlayer === 0) { // Only allow the player to move when it's their turn
+                game.playerMove(index);
+                game.updateUI();
+                game.currentPlayer = 1; // Switch to the AI's turn
+                handleTurns(); // Call handleTurns again to handle the AI's turn
+            }
+        });
+    });
+
     function handleTurns() {
         if (game.gameOver) {
+            let result = 'Game Over\n';
+            if (game.score[0] > game.score[1]) {
+                result += 'You Win';
+            } else if (game.score[0] < game.score[1]) {
+                result += 'You Lose';
+            } else {
+                result += 'It\'s a Draw';
+            }
+            document.getElementById('gameStatus').innerText = result;
+            const gameData = game.getGameData();
+            localStorage.setItem('gameData', JSON.stringify(gameData));
+            JSON.parse(localStorage.getItem('gameData'));
+            console.log(gameData);
             return; // End the loop if the game is over
         }
 
-        if (game.currentPlayer === 0) {
-            // Player's turn
-            const pits = document.querySelectorAll('.pit');
-            pits.forEach((pit, index) => {
-                pit.addEventListener('click', () => {
-                    game.playerMove(index);
-                    game.updateUI();
-                    game.currentPlayer = 1; // Switch to the AI's turn
-                    handleTurns(); // Call handleTurns again to handle the AI's turn
-                });
-            });
-        } else {
+        if (game.currentPlayer === 1) {
             // AI's turn
             setTimeout(() => {
                     game.basicAI(); // AI's move after a delay
@@ -280,6 +287,49 @@ document.addEventListener('DOMContentLoaded', function() {
     exitButton.addEventListener('click', game.openOptionsMenu.bind(game));
     exitGameButton.addEventListener('click', game.exitGame.bind(game));
     restartGameButton.addEventListener('click', game.resetGame.bind(game));
+    const historyButton = document.getElementById('historyButton');
+    historyButton.addEventListener('click', function() {
+        // Retrieve game data from local storage
+        const gameData = localStorage.getItem('gameData');
+        if (gameData) {
+            // Parse the game data
+            const parsedData = JSON.parse(gameData);
+            console.log(parsedData);
+
+            // Check if parsedData.score is an array and has at least two elements
+            if (Array.isArray(parsedData.score) && parsedData.score.length >= 2) {
+                // Get the table
+                const table = document.getElementById('gameData');
+
+                // Make the table visible
+                table.style.display = 'table';
+
+                // Create a new row
+                const row = table.insertRow();
+
+                // Create cells for AI and Player and add them to the row
+                const aiCell = row.insertCell();
+                const playerCell = row.insertCell();
+
+                // Set the text of the cells to the game data
+                aiCell.textContent = parsedData.score[1];
+                playerCell.textContent = parsedData.score[0];
+            } else {
+                // If there's no score data, you could show a message somewhere on the screen
+                // For example, you could have a div with an id of "message" and set its text content
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = 'No previous score data found.';
+            }
+        } else {
+            // If there's no game data, you could show a message somewhere on the screen
+            // For example, you could have a div with an id of "message" and set its text content
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = 'No previous game data found.';
+            document.addEventListener('click', function() {
+                messageDiv.display = 'none';
+            });
+        }
+    });
 
     optionsMenu.addEventListener('click', function(event) {
         event.stopPropagation();

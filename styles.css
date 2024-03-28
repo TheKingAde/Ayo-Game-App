@@ -147,6 +147,9 @@ button:hover {
     display: none; 
 }
 
+#gameData {
+    display: none;
+}
 
 #buttonsContainer.visible {
     /* Show it when the class is added */
