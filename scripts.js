@@ -315,14 +315,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 aiCell.textContent = parsedData.score[1];
                 playerCell.textContent = parsedData.score[0];
             } else {
-                // If there's no score data, you could show a message somewhere on the screen
-                // For example, you could have a div with an id of "message" and set its text content
+                // If there's no score data, show a message on the screen
                 const messageDiv = document.getElementById('message');
                 messageDiv.textContent = 'No previous score data found.';
             }
         } else {
-            // If there's no game data, you could show a message somewhere on the screen
-            // For example, you could have a div with an id of "message" and set its text content
+            // If there's no game data, show a message on the screen
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = 'No previous game data found.';
             document.addEventListener('click', function() {
