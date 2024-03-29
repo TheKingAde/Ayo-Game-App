@@ -10,6 +10,18 @@
         <div class="logo">
             <img src="./images/AyoLogo.jpeg" alt="Ayo Game Logo">
         </div>
+        <button id="exitButton" class="exit-button">&times;</button>
+        <div id="optionsMenu" class="hidden">
+            <button id="exitGameButton">Exit</button>
+            <button id="restartGameButton">Restart</button>
+            <button id="historyButton">History</button>
+        </div>
+        <table id="gameData">
+            <tr>
+                <th>AI</th>
+                <th>Player</th>
+            </tr>
+        </table>
         <div class="board">
             <img src="./images/AyoBoard.png" alt="Ayo Board Image">
         </div>
@@ -19,36 +31,40 @@
             <div id="difficultyLevel" class="hidden">
                 <p><b>Choose Difficulty Level</b></p>
                 <button id="easyButton">EASY</button> 
-                <button>MEDIUM</button>
-                <button>HARD</button>
+                <button>MEDIUM [coming soon]</button>
+                <button>HARD [coming soon] </button>
             </div>
-            <button id="onlineButton">ONLINE</button>
+            <button id="onlineButton">ONLINE [coming soon]</button>
         </div>
-        <div id="AIscoreBoard" class="hidden">
-            <div id="aiScore"><span class="scoreBoardLook">AI: 0</span></div>
+        <div id="gameStatus"></div>
+        <div id="message"></div>
+        <div id="scoreBoard">
+            <div id="AIscoreBoard" class="hidden">
+                <div id="score-1"><span>  AI: 0  </span></div>
+            </div>
+            <div id="PlayerscoreBoard" class="hidden">
+                <div id="score-0"><span>  You: 0  </span></div>
+            </div>
         </div>
         <div id="gameContainer" class="hidden">
             <div id="ayoBoard">
                 <div class="playerSide">
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
+                    <div id="pit-0-0" class="pit">4</div>
+                    <div id="pit-0-1" class="pit">4</div>
+                    <div id="pit-0-2" class="pit">4</div>
+                    <div id="pit-0-3" class="pit">4</div>
+                    <div id="pit-0-4" class="pit">4</div>
+                    <div id="pit-0-5" class="pit">4</div>
                 </div>
                 <div class="playerSide">
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
-                    <div class="pit">4</div>
+                    <div id="pit-1-0" class="pit">4</div>
+                    <div id="pit-1-1" class="pit">4</div>
+                    <div id="pit-1-2" class="pit">4</div>
+                    <div id="pit-1-3" class="pit">4</div>
+                    <div id="pit-1-4" class="pit">4</div>
+                    <div id="pit-1-5" class="pit">4</div>
                 </div>
             </div>
-        </div>
-        <div id="PlayerscoreBoard" class="hidden">
-            <div id="playerScore"><span class="scoreBoardLook">Player: 0</span></div>
         </div>
         <script src="scripts.js"></script>
 </body>

@@ -91,30 +91,30 @@ button:hover {
     height: 300px;
 }
 
-#AIscoreBoard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* #AIscoreBoard {
     opacity: 0;
     animation-name: fadeIn;
     animation-duration: 2s;
     animation-fill-mode: forwards;
-    margin-bottom: 200px;
     font-size: 24px;
+    font-weight: bold;
+} */
+#AIscoreBoard, #PlayerscoreBoard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000;
+    border-radius: 5px;
+    /* other styles... */
 }
 
 #PlayerscoreBoard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    animation-name: fadeIn;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    margin-top: 200px;
-    font-size: 24px;
+
+    margin-top: 22px;
+
 }
 
 @keyframes fadeIn {
@@ -147,16 +147,29 @@ button:hover {
     display: none; 
 }
 
+#gameData {
+    display: none;
+}
 
 #buttonsContainer.visible {
     /* Show it when the class is added */
     display: flex; 
 }
 
+#gameStatus {
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    border-radius: 4px;
+}
+
 #ayoBoard {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #382112;
+    border-radius: 20px;
+    box-shadow: 0px 0px 4px 2px #000000; /* Add shadow */
 }
 
 .playerSide {
@@ -198,15 +211,56 @@ body.backgroundImage {
     transition: background-image 2s ease-in-out;
 }
 
-.scoreBoardLook {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #000000; /* black background */
-    color: white; /* White text */
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 4px 2px;
-    border-radius: 4px;
+/* .scoreBoardLook {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    margin-top: 200px;
+    font-size: 24px;
+} */
+
+.exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
     border: none;
+    font-size: 30px;
+    color: rgb(29, 29, 29);
+    cursor: pointer;
+    display: none; /* Initially hidden */
+}
+
+#optionsMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000;
+    border-radius: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    margin: 0 20px;
+}
+
+#optionsMenu.hidden {
+    /* Hide it initially */
+    display: none; 
+}
+
+#optionsMenu.visible {
+    /* Show it when the class is added */
+    display: flex; 
 }
